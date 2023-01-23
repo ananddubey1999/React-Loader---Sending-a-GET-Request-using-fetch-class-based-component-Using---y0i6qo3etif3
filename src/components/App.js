@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/App.css";
 import Loader from "./Loader";
 
@@ -20,8 +20,28 @@ const App = () => {
     webiste: "",
   });
 
-  const handleOnClick = () => {};
+  useEffect(() => {
+    setIsLoading(false);
+  }, []);
+  const [h1status, seth1status] = useState(false);
+  const handleOnClick = () => {
+    seth1status(true);
+    setIsLoading(true);
+    setTimeout(async () => {
+      setIsLoading(false);
+      const arr = await fetch(BASE_URL).then((response) => response.json());
+      let obj = arr.filter((element, index) => element.id == userId);
+      obj = obj[0];
+      setUserData({ ...obj });
+      console.log(userData);
+    }, 2000)
 
+
+
+
+
+
+  }
   const onChangeHandler = (event) => {
     setUserId(event.target.value);
   };
@@ -42,12 +62,14 @@ const App = () => {
       </button>
 
       <div id="data">
-        <h1>Click on the button to get the user</h1>
+        {isLoading && <Loader />}
+        {h1status == false && <h1>Click on the button to get the user</h1>}
         <h4 id="id">{userData.id}</h4>
         <h4 id="email">{userData.email}</h4>
         <h4 id="name">{userData.name}</h4>
         <h4 id="phone">{userData.phone}</h4>
         <h4 id="website">{userData.website}</h4>
+
       </div>
     </div>
   );
