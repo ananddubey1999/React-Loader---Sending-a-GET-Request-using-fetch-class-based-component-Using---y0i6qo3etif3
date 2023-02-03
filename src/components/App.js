@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import "../styles/App.css";
 import Loader from "./Loader";
 
@@ -19,27 +19,16 @@ const App = () => {
     phone: "",
     webiste: "",
   });
-
-  useEffect(() => {
-    setIsLoading(false);
-  }, []);
-  const [h1status, seth1status] = useState(false);
   const handleOnClick = () => {
-    seth1status(true);
-    setIsLoading(true);
+    setIsLoading(LoadingStatus.IN_PROGRESS);
     setTimeout(async () => {
-      setIsLoading(false);
+      setIsLoading(LoadingStatus.SUCCESS);
       const arr = await fetch(BASE_URL).then((response) => response.json());
       let obj = arr.filter((element, index) => element.id == userId);
       obj = obj[0];
       setUserData({ ...obj });
-      console.log(userData);
+      // console.log(userData);
     }, 2000)
-
-
-
-
-
 
   }
   const onChangeHandler = (event) => {
@@ -60,16 +49,14 @@ const App = () => {
       <button id="btn" onClick={handleOnClick}>
         Get User
       </button>
-
       <div id="data">
-        {isLoading && <Loader />}
-        {h1status == false && <h1>Click on the button to get the user</h1>}
+        {isLoading === 'IN_PROGRESS' && <Loader />}
+        {isLoading === 'NOT_STARTED' && <h1>Click on the button to get the user</h1>}
         <h4 id="id">{userData.id}</h4>
         <h4 id="email">{userData.email}</h4>
         <h4 id="name">{userData.name}</h4>
         <h4 id="phone">{userData.phone}</h4>
         <h4 id="website">{userData.website}</h4>
-
       </div>
     </div>
   );
